@@ -1,13 +1,15 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import {Switch, Route, Link, BrowserRouter as Router} from "react-router-dom"
 import AddProduct from './components/AddProduct'
 import Cart from './components/Cart'
 import Login from './components/Login'
 import ProductList from './components/ProductList'
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 import Context from "./Context"
-import { router } from 'json-server';
+
 
 function App() {
   const [user, setUser] = useState(null)
@@ -15,6 +17,12 @@ function App() {
   const [products, setProducts] = useState([])
   
   let routerRef = React.createRef()
+
+  useEffect(() => {
+    let currentUser = localStorage.getItem("user")
+    currentUser = currentUser ? JSON.parse(currentUser) : null;
+    setUser(currentUser)
+  }, [])
   
   const removeFromCart = () => {
     return null;
@@ -22,8 +30,31 @@ function App() {
   const addToCart = () => {
     return null;
   }
-  const login = () => {
-    return null;
+  const login = async (email, password) => {
+    const res = await axios.post(
+      'http://localhost:3001/login',
+    {email, password},
+    ).catch((res) => {
+      return {status: 401, message: 'Unauthorized'}
+    })
+    if (res.status === 200) {
+      const {email} = jwt_decode(res.data.accessToken)
+      const currUser ={
+        email, 
+        token: res.data.accessToken,
+        accessLevel: email === 'admin@example.com' ? 0 : 1
+      }
+      setUser(currUser)
+      localStorage.setItem("user", JSON.stringify(currUser))
+      return true;
+    } else {
+      return false;
+    }
+  }
+  const logout = (e) => {
+    e.preventDefault()
+    setUser(null)
+    localStorage.removeItem("user")
   }
   const addProduct = () => {
     return null;
@@ -34,16 +65,14 @@ function App() {
   const checkout = () => {
 
   }
-  const logout = () => {
 
-  }
   return (
     <Context.Provider value={{user, cart, products, removeFromCart, addToCart, login, addProduct, clearCart, checkout}}>
       <Router ref={routerRef}>
         <div className="App">
           <nav className="nav">
             <div className="navbar-brand">
-              <b>ecommerce</b>
+              <b>Ecommerce</b>
             </div>
             <div className="navbar-menu">
               <Link to="/products" className="navbar-item">
@@ -55,7 +84,7 @@ function App() {
                 </Link>
               )}
                 <Link to="/cart" className="navbar-item">
-                  Cart<span>{Object.keys(cart).length}</span>
+                  Cart<span className="cart-total">{Object.keys(cart).length}</span>
                 </Link>
                 {!user ? (
                   <Link to="/login" className="navbar-item">
@@ -70,7 +99,7 @@ function App() {
           </nav>
           <Switch>
             <Route exact path="/" component={ProductList} />
-            <Route exact path="/login" component={login} />
+            <Route exact path="/login" component={Login} />
             <Route exact path="/cart" component={Cart} />
             <Route exact path="/add-product" component={addProduct} />
             <Route exact path="/products" component={ProductList} />
