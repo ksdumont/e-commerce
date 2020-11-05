@@ -62,8 +62,7 @@ function App() {
   const addProduct = (product, callback) => {
     let currentProducts = products.slice()
     currentProducts.push(product)
-    setProducts(currentProducts) 
-    callback && callback()
+    setProducts(currentProducts, () => callback && callback()) 
   }
   const clearCart = () => {
 
@@ -107,7 +106,7 @@ function App() {
             <Route exact path="/" component={ProductList} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/cart" component={Cart} />
-            <Route exact path="/add-product" component={addProduct} />
+            <Route exact path="/add-product" component={AddProduct} />
             <Route exact path="/products" component={ProductList} />
           </Switch>
         </div>

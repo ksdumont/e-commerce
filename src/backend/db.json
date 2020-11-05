@@ -43,6 +43,30 @@
       "price": 109.99,
       "shortDesc": "Nulla facilisi. Curabitur at lacus ac velit ornare lobortis.",
       "description": "Cras sagittis. Praesent nec nisl a purus blandit viverra. Ut leo. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Fusce a quam."
+    },
+    {
+      "id": "cg2xf41xrbkkh5bn8f0",
+      "name": "bath robe",
+      "price": "23",
+      "stock": "3",
+      "shortDesc": "cozy robe",
+      "description": "get it now"
+    },
+    {
+      "id": "mfkvfccupb8kh5bo5ix",
+      "name": "bath robe",
+      "price": "23",
+      "stock": "3",
+      "shortDesc": "cozy robe",
+      "description": "get it now"
+    },
+    {
+      "id": "2qtd544arq6kh5bomcr",
+      "name": "a",
+      "price": "3",
+      "stock": "3",
+      "shortDesc": "a",
+      "description": "3"
     }
   ]
 }
