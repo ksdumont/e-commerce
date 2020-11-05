@@ -18,12 +18,15 @@ function App() {
   
   let routerRef = React.createRef()
 
-  useEffect(() => {
+  // SET USER, SET PRODUCTS
+  useEffect( async () => {
     let currentUser = localStorage.getItem("user")
+    const fetchProducts = await axios.get("http://localhost:3001/products")
     currentUser = currentUser ? JSON.parse(currentUser) : null;
     setUser(currentUser)
+    setProducts(fetchProducts.data)
   }, [])
-  
+  console.log({"user": user, "products": products})
   const removeFromCart = () => {
     return null;
   }
@@ -56,8 +59,11 @@ function App() {
     setUser(null)
     localStorage.removeItem("user")
   }
-  const addProduct = () => {
-    return null;
+  const addProduct = (product, callback) => {
+    let currentProducts = products.slice()
+    currentProducts.push(product)
+    setProducts(currentProducts) 
+    callback && callback()
   }
   const clearCart = () => {
 
