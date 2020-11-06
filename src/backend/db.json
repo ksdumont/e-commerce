@@ -67,6 +67,22 @@
       "stock": "3",
       "shortDesc": "a",
       "description": "3"
+    },
+    {
+      "id": "jalxi0x16ekh6ehmwz",
+      "name": "bathrobe",
+      "price": "15",
+      "stock": "3",
+      "shortDesc": "this is great",
+      "description": "you have to get this"
+    },
+    {
+      "id": "dskh64yaxm7kh6evmwr",
+      "name": "coffee",
+      "price": "12",
+      "stock": "5",
+      "shortDesc": "the best beans ever",
+      "description": "come and get your coffee beans"
     }
   ]
 }

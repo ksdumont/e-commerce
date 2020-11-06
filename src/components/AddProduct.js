@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Context from '../Context'
 import {Redirect} from "react-router-dom"
 import axios from "axios"
@@ -13,25 +13,30 @@ const initialState ={
 
 function AddProduct() {
   const [state, setState] = useState(initialState)
+  const [submitted, setSubmitted] = useState(false)
   const context = useContext(Context)
 
   let {name, price, stock, shortDesc, description} = state
   const {user} = context
+
+  useEffect(() => {
+    setState(initialState)
+  },[submitted])
 
   const save = async (e) => {
     e.preventDefault()
     if (name && price) {
       const id = Math.random().toString(36).substring(2) + Date.now().toString(36)
       await axios.post('http://localhost:3001/products', {id, name, price, stock, shortDesc, description})
-      context.addProduct({name, price, shortDesc, description, stock: stock || 0},
-        () => setState(initialState))
-        setState({flash: {status: 'is-success', msg: 'Product created successfully'}})
+      context.addProduct({name, price, shortDesc, description, stock: stock || 0})
+      setState({flash: {status: 'is-success', msg: 'Product created successfully'}})
+      setSubmitted(prevState => !prevState)
     }
     else {
       setState({flash: {status: 'is-danger', msg: 'Please enter a name and price'}})
     }
   }
-  {  console.log(state)}
+  
   return !(user && user.accessLevel < 1) ? (
     <Redirect to="/" />
   ) : (

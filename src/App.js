@@ -26,7 +26,7 @@ function App() {
     setUser(currentUser)
     setProducts(fetchProducts.data)
   }, [])
-  console.log({"user": user, "products": products})
+  
   const removeFromCart = () => {
     return null;
   }
@@ -59,10 +59,10 @@ function App() {
     setUser(null)
     localStorage.removeItem("user")
   }
-  const addProduct = (product, callback) => {
+  const addProduct = (product) => {
     let currentProducts = products.slice()
     currentProducts.push(product)
-    setProducts(currentProducts, () => callback && callback()) 
+    setProducts(currentProducts) 
   }
   const clearCart = () => {
 
