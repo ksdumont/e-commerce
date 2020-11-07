@@ -21,17 +21,31 @@ function App() {
   // SET USER, SET PRODUCTS
   useEffect( async () => {
     let currentUser = localStorage.getItem("user")
+    let currentCart = localStorage.getItem("cart")
     const fetchProducts = await axios.get("http://localhost:3001/products")
     currentUser = currentUser ? JSON.parse(currentUser) : null;
+    currentCart = currentCart ? JSON.parse(currentCart) : {};
     setUser(currentUser)
     setProducts(fetchProducts.data)
+    setCart(currentCart)
   }, [])
   
-  const removeFromCart = () => {
-    return null;
+  const removeFromCart = (cartItemId) => {
+    delete cart[cartItemId]
+    localStorage.setItem("cart", JSON.stringify(cart))
+    setCart(cart)
   }
-  const addToCart = () => {
-    return null;
+  const addToCart = (cartItem) => {
+    if (cart[cartItem.id]) {
+      cart[cartItem.id].amount += cartItem.amount
+    } else {
+      cart[cartItem.id] = cartItem;
+    }
+    if (cart[cartItem.id].amount > cart[cartItem.id].product.stock) {
+      cart[cartItem.id].amount = cart[cartItem.id]. product.stock;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart))
+    setCart(cart)
   }
   const login = async (email, password) => {
     const res = await axios.post(
@@ -65,10 +79,24 @@ function App() {
     setProducts(currentProducts) 
   }
   const clearCart = () => {
-
+    let clearedCart = {}
+    localStorage.removeItem("cart")
+    setCart(clearedCart)
   }
   const checkout = () => {
-
+    if (!user) {
+      routerRef.current.history.push("/login") 
+      return
+    }
+    const currProducts = products.map(p => {
+      if (cart[p.name]) {
+        p.stock = p.stock - cart[p.name].amount
+        axios.put(`http://localhost:3001/products/${p.id}`, {...p})
+      }
+      return p;
+    })
+    setProducts(currProducts)
+    clearCart()
   }
 
   return (

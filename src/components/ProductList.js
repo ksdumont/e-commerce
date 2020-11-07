@@ -5,7 +5,7 @@ import ProductItem from './ProductItem'
 function ProductList() {
   const context = useContext(Context)
   const {products, addToCart} = context
-  console.log(products)
+  
   return (
     <>
       <div className="product-list">
